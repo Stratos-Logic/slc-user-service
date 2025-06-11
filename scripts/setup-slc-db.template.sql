@@ -14,13 +14,10 @@ DO
 $$
     BEGIN
         IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'slc_user_service') THEN
-            CREATE ROLE slc_user_service
-                LOGIN
-                PASSWORD '${SPRING_DATASOURCE_PASSWORD}'
-                NOSUPERUSER
-                NOCREATEDB
-                NOCREATEROLE
-                NOINHERIT;
+            EXECUTE format(
+                    'CREATE ROLE slc_user_service LOGIN PASSWORD %L NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT',
+                    '${SPRING_DATASOURCE_PASSWORD}'
+                    );
         END IF;
     END
 $$;
@@ -28,6 +25,15 @@ $$;
 -- 🎛️ Grant least-privilege access
 GRANT USAGE ON SCHEMA auth TO slc_user_service;
 GRANT USAGE ON SCHEMA access TO slc_user_service;
+-- 🛡️ Create readonly_user if missing
+DO
+$$
+    BEGIN
+        IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'readonly_user') THEN
+            CREATE ROLE readonly_user;
+        END IF;
+    END
+$$;
 GRANT USAGE ON SCHEMA logs TO readonly_user;
 GRANT USAGE ON SCHEMA internal TO ${POSTGRES_USER};
 
