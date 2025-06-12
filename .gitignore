@@ -39,3 +39,5 @@ build/
 scrap.txt
 temp
 /new_remote_repository.sh
+/src/main/resources/application-dev.properties
+/tree.sh

@@ -13,9 +13,9 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER}"]
-      interval: 5s
-      timeout: 5s
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER}" ]
+      interval: 2s
+      timeout: 2s
       retries: 10
     networks:
       - slc-net
@@ -24,16 +24,14 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.db-init
-    container_name: slc-db-init
-    depends_on:
-      db:
-        condition: service_healthy
+    container_name: slc-user-service-db-init
     env_file:
       - .env
     volumes:
       - ./scripts:/scripts:ro
-    entrypoint: /scripts/db-init-entrypoint.sh
-    restart: "no"
+    depends_on:
+      db:
+        condition: service_healthy
     networks:
       - slc-net
 
@@ -42,20 +40,18 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: slc-user-service
-    depends_on:
-      db-init:
-        condition: service_completed_successfully
     env_file:
       - .env
     ports:
       - "${SLC_USER_PORT}:8080"
+    depends_on:
+      db:
+        condition: service_healthy
     networks:
       - slc-net
-    restart: always
 
 volumes:
   pgdata:
 
 networks:
   slc-net:
-    driver: bridge

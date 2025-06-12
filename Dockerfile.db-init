@@ -1,5 +1,5 @@
 FROM postgres:16
-
-RUN apt-get update && \
-    apt-get install -y gettext && \
-    rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y gettext && rm -rf /var/lib/apt/lists/*
+COPY scripts/db-init-entrypoint.sh /db-init-entrypoint.sh
+RUN chmod +x /db-init-entrypoint.sh
+ENTRYPOINT ["/db-init-entrypoint.sh"]
