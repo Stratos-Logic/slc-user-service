@@ -3,9 +3,9 @@
 -- ===============================
 
 -- 🔍 Indexes for faster lookups
-CREATE INDEX IF NOT EXISTS idx_users_email ON auth.users(email);
-CREATE INDEX IF NOT EXISTS idx_roles_name ON auth.roles(name);
-CREATE INDEX IF NOT EXISTS idx_audit_log_user_id ON soc2.audit_log(user_id);
+CREATE INDEX IF NOT EXISTS idx_users_email ON auth.users (email);
+CREATE INDEX IF NOT EXISTS idx_roles_name ON auth.roles (name);
+CREATE INDEX IF NOT EXISTS idx_audit_log_user_id ON soc2.audit_log (user_id);
 
 -- 🧑‍💼 Add role-based RLS policy on users
 DROP POLICY IF EXISTS select_all_users ON auth.users;
@@ -15,7 +15,8 @@ CREATE POLICY select_active_users FOR SELECT ON auth.users
     USING (is_active);
 
 -- 🧾 RLS on soc2.audit_log (optional based on access model)
-ALTER TABLE soc2.audit_log ENABLE ROW LEVEL SECURITY;
+ALTER TABLE soc2.audit_log
+    ENABLE ROW LEVEL SECURITY;
 
 -- 👀 Read-only access for readonly_user on audit_log
 GRANT SELECT ON soc2.audit_log TO readonly_user;
@@ -26,12 +27,14 @@ CREATE POLICY read_only_audit ON soc2.audit_log
     USING (true);
 
 -- 🛠️ Add RLS enforcement on auth.roles and auth.user_roles
-ALTER TABLE auth.roles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE auth.roles
+    ENABLE ROW LEVEL SECURITY;
 CREATE POLICY roles_read_only FOR SELECT ON auth.roles
     TO slc_user_service
     USING (true);
 
-ALTER TABLE auth.user_roles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE auth.user_roles
+    ENABLE ROW LEVEL SECURITY;
 CREATE POLICY user_roles_read_only FOR SELECT ON auth.user_roles
     TO slc_user_service
     USING (true);

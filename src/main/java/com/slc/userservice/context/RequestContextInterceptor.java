@@ -2,11 +2,13 @@ package com.slc.userservice.context;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
 @Component
+@RequiredArgsConstructor
 public class RequestContextInterceptor implements Filter {
 
     @Override

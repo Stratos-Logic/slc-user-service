@@ -2,23 +2,32 @@ package com.slc.userservice.domain;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.util.UUID;
 
 @Entity
 @Table(name = "audit_logs")
 @Data
+@NoArgsConstructor
 public class AuditLogEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    private String eventType;
-    private String entityType;
-    private String entityId;
     private String actor;
+    private String source;
+    private String role;
+    private String action;
+    private String target;
+
     private String message;
-    private OffsetDateTime timestamp;
+    private String requestId;
+
+
+    @Column(nullable = false)
+    private Instant timestamp;
 }
+
