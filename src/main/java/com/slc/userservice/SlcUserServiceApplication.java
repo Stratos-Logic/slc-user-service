@@ -1,4 +1,4 @@
-package com.slc.slcuserservice;
+package com.slc.userservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
